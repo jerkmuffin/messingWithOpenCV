@@ -3,7 +3,8 @@ import mediapipe as mp
 import numpy as np
 import time
 
-
+### https://morioh.com/p/e1b81be4bb0f
+### thanks for the help
 mpDraw = mp.solutions.drawing_utils
 mpPose = mp.solutions.pose
 pose = mpPose.Pose()
