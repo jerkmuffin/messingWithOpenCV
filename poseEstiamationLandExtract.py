@@ -29,6 +29,7 @@ def calculate_angle(a,b,c):
 while cap.isOpened():
     success, img = cap.read()
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # imgGRY = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     results = pose.process(imgRGB)
 
     try:
