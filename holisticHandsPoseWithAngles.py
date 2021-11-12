@@ -56,7 +56,61 @@ with mp_holistic.Holistic(
         r_wrist = [landmarks[mp_holistic.PoseLandmark.RIGHT_WRIST.value].x, landmarks[mp_holistic.PoseLandmark.RIGHT_WRIST.value].y]
         r_angle = calculate_angle(r_shoulder, r_elbow, r_wrist)
     except Exception as e:
-        print(f'problems {e}')
+        print(f'pose problems {e}')
+        pass
+
+    try:
+        landmarks = results.right_hand_landmarks.landmark
+        r_index_tip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_TIP.value].y]
+        r_index_dip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_DIP.value].y]
+        r_index_pip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_PIP.value].y]
+        r_index_mcp = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_MCP.value].y]
+        r_middle_tip = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_TIP.value].y]
+        r_middle_dip =[landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_DIP.value].y]
+        r_middle_pip = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_PIP.value].y]
+        r_middle_mcp = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_MCP.value].y]
+        r_ring_tip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_TIP.value].y]
+        r_ring_dip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_DIP.value].y]
+        r_ring_pip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_PIP.value].y]
+        r_ring_mcp = [landmarks[mp_holistic.HandLandmark.RING_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_MCP.value].y]
+        r_pinky_tip = [landmarks[mp_holistic.HandLandmark.PINKY_TIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_TIP.value].y]
+        r_pinky_dip = [landmarks[mp_holistic.HandLandmark.PINKY_DIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_DIP.value].y]
+        r_pinky_pip = [landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].y]
+        r_pinky_mcp = [landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].y]
+
+        print(r_index_tip[1] < r_index_dip[1] < r_index_pip[1] < r_index_mcp[1])
+        print(r_middle_tip[1] < r_middle_dip[1] < r_middle_pip[1] < r_middle_mcp[1])
+        print(r_ring_tip[1] < r_ring_dip[1] < r_ring_pip[1] < r_ring_mcp[1])
+        print(r_pinky_tip[1] < r_pinky_dip[1] < r_pinky_pip[1] < r_pinky_mcp[1])
+    except Exception as e:
+        print(f'right hand problems {e}')
+        pass
+
+    try:
+        landmarks = results.left_hand_landmarks.landmark
+        l_index_tip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_TIP.value].y]
+        l_index_dip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_DIP.value].y]
+        l_index_pip = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_PIP.value].y]
+        l_index_mcp = [landmarks[mp_holistic.HandLandmark.INDEX_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.INDEX_FINGER_MCP.value].y]
+        l_middle_tip = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_TIP.value].y]
+        l_middle_dip =[landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_DIP.value].y]
+        l_middle_pip = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_PIP.value].y]
+        l_middle_mcp = [landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.MIDDLE_FINGER_MCP.value].y]
+        l_ring_tip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_TIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_TIP.value].y]
+        l_ring_dip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_DIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_DIP.value].y]
+        l_ring_pip = [landmarks[mp_holistic.HandLandmark.RING_FINGER_PIP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_PIP.value].y]
+        l_ring_mcp = [landmarks[mp_holistic.HandLandmark.RING_FINGER_MCP.value].x, landmarks[mp_holistic.HandLandmark.RING_FINGER_MCP.value].y]
+        l_pinky_tip = [landmarks[mp_holistic.HandLandmark.PINKY_TIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_TIP.value].y]
+        l_pinky_dip = [landmarks[mp_holistic.HandLandmark.PINKY_DIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_DIP.value].y]
+        l_pinky_pip = [landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].y]
+        l_pinky_mcp = [landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].y]
+
+        print(l_index_tip[1] < l_index_dip[1] < l_index_pip[1] < l_index_mcp[1])
+        print(l_middle_tip[1] < l_middle_dip[1] < l_middle_pip[1] < l_middle_mcp[1])
+        print(l_ring_tip[1] < l_ring_dip[1] < l_ring_pip[1] < l_ring_mcp[1])
+        print(l_pinky_tip[1] < l_pinky_dip[1] < l_pinky_pip[1] < l_pinky_mcp[1])
+    except Exception as e:
+        print(f'left hand problems {e}')
         pass
 
     # Draw landmark annotation on the image.

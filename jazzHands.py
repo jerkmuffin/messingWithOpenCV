@@ -8,6 +8,7 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
 cap = cv2.VideoCapture(0)
+pTime = 0
 with mp_hands.Hands(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as hands:
@@ -36,7 +37,18 @@ with mp_hands.Hands(
             mp_drawing_styles.get_default_hand_landmarks_style(),
             mp_drawing_styles.get_default_hand_connections_style())
     # Flip the image horizontally for a selfie-view display.
-    cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+
+    cTime = time.time()
+    fps = 1/(cTime-pTime)
+    fps = f"fps: {int(fps)}"
+    pTime = cTime
+
+
+    frame = cv2.flip(image, 1)
+    cv2.putText(frame, str((fps)), (70, 50), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 0), 3)
+
+    # cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
+    cv2.imshow('jazzy hands', frame)
     if cv2.waitKey(5) & 0xFF == ord('q'):
       break
 cap.release()
