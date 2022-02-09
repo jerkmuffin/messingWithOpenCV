@@ -9,6 +9,7 @@ mp_holistic = mp.solutions.holistic
 
 pTime = 0
 cap = cv2.VideoCapture(0)
+needWidthHeight = True
 
 def calculate_angle(a,b,c):
     a = np.array(a) # First
@@ -33,6 +34,11 @@ with mp_holistic.Holistic(
     min_tracking_confidence=0.5) as holistic:
   while cap.isOpened():
     success, image = cap.read()
+    if needWidthHeight:
+        width = cap.get(3)
+        height = cap.get(4)
+        needWidthHeight = False
+
     if not success:
       print("Ignoring empty camera frame.")
       # If loading a video, use 'break' instead of 'continue'.
@@ -150,12 +156,12 @@ with mp_holistic.Holistic(
 
     # print left elbow angle 
     if 'l_angle' in globals():
-        cv2.putText(frame, str(l_angle), tuple(np.multiply(elbow_flip(l_elbow), [1280, 720]).astype(int)),
+        cv2.putText(frame, str(l_angle), tuple(np.multiply(elbow_flip(l_elbow), [width, height]).astype(int)),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     # print right elbow angle
     if 'r_angle' in globals():
-        cv2.putText(frame, str(r_angle), tuple(np.multiply(elbow_flip(r_elbow), [1280, 720]).astype(int)),
+        cv2.putText(frame, str(r_angle), tuple(np.multiply(elbow_flip(r_elbow), [width, height]).astype(int)),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
     
