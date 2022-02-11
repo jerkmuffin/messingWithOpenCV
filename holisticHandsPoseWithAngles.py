@@ -4,6 +4,7 @@ import numpy as np
 import time
 import json
 import relayActivator as rl
+import threading as th
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -16,8 +17,8 @@ left_fingers_open = False
 right_fingers_open= False
 right_wave = False
 left_wave = False
-now = time.time()
-
+reset = time.time()
+wait = False
 def calculate_angle(a,b,c):
     a = np.array(a) # First
     b = np.array(b) # Mid
@@ -194,12 +195,19 @@ with mp_holistic.Holistic(
     cv2.imshow('MediaPipe Holistic', frame)
 
 
+    def activateRelay():
+        time.sleep(.5)
+        rl.on()
+        time.sleep(.25)
+        rl.off()
+
+
     if right_wave or left_wave:
-        if time.time() > now+3:
-            rl.on()
-            time.sleep(.25)
-            now = time.time()
-            rl.off()
+        now = time.time()
+        if now > reset+3:
+            activateRelay()
+            reset = time.time()
+
 
     if cv2.waitKey(5) & 0xFF == ord('q'):
       break
