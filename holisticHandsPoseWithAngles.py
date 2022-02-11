@@ -3,6 +3,7 @@ import mediapipe as mp
 import numpy as np
 import time
 import json
+import relayActivator as rl
 
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -11,6 +12,11 @@ mp_holistic = mp.solutions.holistic
 pTime = 0
 cap = cv2.VideoCapture(0)
 needWidthHeight = True
+left_fingers_open = False
+right_fingers_open= False
+right_wave = False
+left_wave = False
+now = time.time()
 
 def calculate_angle(a,b,c):
     a = np.array(a) # First
@@ -85,12 +91,16 @@ with mp_holistic.Holistic(
         r_pinky_pip = [landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].y]
         r_pinky_mcp = [landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].y]
 
-        print(r_index_tip[1] < r_index_dip[1] < r_index_pip[1] < r_index_mcp[1])
-        print(r_middle_tip[1] < r_middle_dip[1] < r_middle_pip[1] < r_middle_mcp[1])
-        print(r_ring_tip[1] < r_ring_dip[1] < r_ring_pip[1] < r_ring_mcp[1])
-        print(r_pinky_tip[1] < r_pinky_dip[1] < r_pinky_pip[1] < r_pinky_mcp[1])
+        if (r_index_tip[1] < r_index_dip[1] < r_index_pip[1] < r_index_mcp[1]) and \
+            (r_middle_tip[1] < r_middle_dip[1] < r_middle_pip[1] < r_middle_mcp[1]) and \
+            (r_ring_tip[1] < r_ring_dip[1] < r_ring_pip[1] < r_ring_mcp[1]) and \
+            (r_pinky_tip[1] < r_pinky_dip[1] < r_pinky_pip[1] < r_pinky_mcp[1]):
+              right_fingers_open = True
+        else:
+              right_fingers_open = False
     except Exception as e:
         print(f'right hand problems {e}')
+        right_fingers_open = False
         pass
 
     try:
@@ -112,12 +122,16 @@ with mp_holistic.Holistic(
         l_pinky_pip = [landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_PIP.value].y]
         l_pinky_mcp = [landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].x, landmarks[mp_holistic.HandLandmark.PINKY_MCP.value].y]
 
-        print(l_index_tip[1] < l_index_dip[1] < l_index_pip[1] < l_index_mcp[1])
-        print(l_middle_tip[1] < l_middle_dip[1] < l_middle_pip[1] < l_middle_mcp[1])
-        print(l_ring_tip[1] < l_ring_dip[1] < l_ring_pip[1] < l_ring_mcp[1])
-        print(l_pinky_tip[1] < l_pinky_dip[1] < l_pinky_pip[1] < l_pinky_mcp[1])
+        if (l_index_tip[1] < l_index_dip[1] < l_index_pip[1] < l_index_mcp[1]) and \
+          (l_middle_tip[1] < l_middle_dip[1] < l_middle_pip[1] < l_middle_mcp[1]) and \
+          (l_ring_tip[1] < l_ring_dip[1] < l_ring_pip[1] < l_ring_mcp[1]) and \
+          (l_pinky_tip[1] < l_pinky_dip[1] < l_pinky_pip[1] < l_pinky_mcp[1]):
+            left_fingers_open = True
+        else:
+            left_fingers_open = False
     except Exception as e:
         print(f'left hand problems {e}')
+        left_fingers_open = False
         pass
 
     # Draw landmark annotation on the image.
@@ -165,8 +179,27 @@ with mp_holistic.Holistic(
         cv2.putText(frame, str(r_angle), tuple(np.multiply(elbow_flip(r_elbow), [width, height]).astype(int)),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
-    
+    if left_fingers_open and (l_angle > 30 and l_angle < 100):
+        left_wave = True
+    else:
+        left_wave = False
+
+
+    if right_fingers_open and (r_angle > 30 and r_angle < 100):
+        right_wave = True
+    else:
+        right_wave = False
+
+    print(f"right wave: {right_wave} --- {right_fingers_open} {r_angle}\nleft wave: {left_wave} --- {left_fingers_open} {l_angle}") 
     cv2.imshow('MediaPipe Holistic', frame)
+
+
+    if right_wave or left_wave:
+        if time.time() > now+3:
+            rl.on()
+            time.sleep(.25)
+            now = time.time()
+            rl.off()
 
     if cv2.waitKey(5) & 0xFF == ord('q'):
       break
