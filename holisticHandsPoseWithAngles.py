@@ -17,10 +17,12 @@ needWidthHeight = True
 left_fingers_open = False
 right_fingers_open= False
 right_wave = False
+right_wrist_above_shoulder = False
+left_wrist_above_shoulder = False
 left_wave = False
 relayOn = False
 reset = time.time()
-wait = False
+resetDelay = 3 #seconds to reset the relay timer
 def calculate_angle(a,b,c):
     a = np.array(a) # First
     b = np.array(b) # Mid
@@ -66,11 +68,15 @@ with mp_holistic.Holistic(
         l_elbow = [landmarks[mp_holistic.PoseLandmark.LEFT_ELBOW.value].x, landmarks[mp_holistic.PoseLandmark.LEFT_ELBOW.value].y]
         l_wrist = [landmarks[mp_holistic.PoseLandmark.LEFT_WRIST.value].x, landmarks[mp_holistic.PoseLandmark.LEFT_WRIST.value].y]
         l_angle = calculate_angle(l_shoulder, l_elbow, l_wrist)
+        left_wrist_above_shoulder = True if l_wrist[1] < l_shoulder[1] else False
 
         r_shoulder = [landmarks[mp_holistic.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[mp_holistic.PoseLandmark.RIGHT_SHOULDER.value].y]
         r_elbow = [landmarks[mp_holistic.PoseLandmark.RIGHT_ELBOW.value].x, landmarks[mp_holistic.PoseLandmark.RIGHT_ELBOW.value].y]
         r_wrist = [landmarks[mp_holistic.PoseLandmark.RIGHT_WRIST.value].x, landmarks[mp_holistic.PoseLandmark.RIGHT_WRIST.value].y]
         r_angle = calculate_angle(r_shoulder, r_elbow, r_wrist)
+        right_wrist_above_shoulder = True if r_wrist[1] < r_shoulder[1] else False
+        
+
     except Exception as e:
         print(f'pose problems {e}')
         pass
@@ -227,7 +233,7 @@ with mp_holistic.Holistic(
 
     if right_wave or left_wave:
         now = time.time()
-        if now > reset+3:
+        if now > reset + resetDelay:
             activateRelay()
             reset = time.time()
 
