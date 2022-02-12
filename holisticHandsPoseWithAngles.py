@@ -1,3 +1,4 @@
+import re
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -17,6 +18,7 @@ left_fingers_open = False
 right_fingers_open= False
 right_wave = False
 left_wave = False
+relayOn = False
 reset = time.time()
 wait = False
 def calculate_angle(a,b,c):
@@ -191,15 +193,36 @@ with mp_holistic.Holistic(
     else:
         right_wave = False
 
-    print(f"right wave: {right_wave} --- {right_fingers_open} {r_angle}\nleft wave: {left_wave} --- {left_fingers_open} {l_angle}") 
-    cv2.imshow('MediaPipe Holistic', frame)
+    print(f"right wave: {right_wave}\nleft wave: {left_wave}\nrelay on: {relayOn}")
+    shapes = np.zeros_like(frame, np.uint8)
 
+
+    if relayOn:
+        cv2.rectangle(shapes, (0, 0), (640, 480), (0, 0, 255), cv2.FILLED)
+    elif left_wave or right_wave and not relayOn:
+        cv2.rectangle(shapes, (0, 0), (640, 480), (0, 255, 0), cv2.FILLED)
+    
+    out = frame.copy()
+    out = cv2.addWeighted(frame, 1, shapes, .5, 0)
+    cv2.imshow('MediaPipe Holistic', out)
+
+    def turnOffCB():
+        rl.off()
+        global relayOn
+        relayOn = False
+
+    def waitedTurnOnCB():
+        rl.on()
+        global relayOn
+        relayOn = True
+        timer = th.Timer(.25, turnOffCB)
+        timer.start()
 
     def activateRelay():
-        time.sleep(.5)
-        rl.on()
-        time.sleep(.25)
-        rl.off()
+        timer = th.Timer(.5, waitedTurnOnCB)
+        timer.start()
+        
+        print('started timer......')
 
 
     if right_wave or left_wave:
